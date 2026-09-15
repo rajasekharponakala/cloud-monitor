@@ -5,18 +5,7 @@ on:
   pull_request:
 
 jobs:
-  backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install pytest
-      - run: python -m py_compile monitor/*.py
-      - run: python -m pytest -q
-
-  frontend:
+  dashboard:
     runs-on: ubuntu-latest
     defaults:
       run:

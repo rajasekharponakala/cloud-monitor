@@ -7,5 +7,6 @@ Report vulnerabilities via GitHub private security advisories (preferred) or by 
 ## Scope notes
 
 - Collectors store provider API tokens in local `config.toml` only; never commit it.
-- The Python API binds `127.0.0.1` by default — put Caddy/basic-auth in front before exposing it.
-- Supported Python: 3.11+; dashboard: Node 22.
+- Guard `POST /api/collect` with `CRON_SECRET` in any shared deployment.
+- The app binds localhost by default — put Caddy/basic-auth in front before exposing it.
+- Supported runtimes: Node 22 (`node:sqlite`); dashboard: Node 22.

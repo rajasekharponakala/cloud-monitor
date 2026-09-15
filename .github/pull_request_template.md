@@ -1,8 +1,7 @@
 ## What / why
 
 ## How to test
-- [ ] `python -m pytest -q`
-- [ ] `npm run build` in `dashboard/`
+- [ ] `npm run lint` and `npm run build` in `dashboard/`
 
 ## Checklist
 - [ ] No tokens or `.db` files committed

@@ -6,37 +6,45 @@
 Multi-provider cloud inventory + cost estimates for the hosts Komiser-style
 tools don't cover: **Hetzner, DigitalOcean, Cloudflare, DreamHost, GoDaddy, AWS, GCP**.
 
-- Backend: stdlib-only Python collectors → SQLite (`monitor/`)
-- Frontend: Next.js 14 dashboard (`dashboard/`)
-- License: AGPL-3.0-or-later
+Single-stack **Next.js 14 + TypeScript**, zero runtime npm dependencies
+(`node:sqlite` for storage, `node:crypto` for AWS SigV4). License: AGPL-3.0-or-later.
 
 ## Layout
 
 ```
-monitor/            # backend collectors (one file per provider) + scheduler + JSON API
-  base.py           # HTTP helpers, MTD prorating, SQLite upserts
-  hetzner.py digitalocean.py cloudflare.py dreamhost.py godaddy.py aws.py gcp.py
-  scheduler.py      # cron/loop runner  |  server.py  # :4000 API + fallback UI
-dashboard/          # Next.js 14 frontend (reads the :4000 API)
-tests/              # offline backend unit tests
-.github/workflows/  # CI (pytest + npm build), dependabot
-Dockerfile.backend Dockerfile.dashboard docker-compose.yml
+dashboard/
+  app/
+    page.tsx                 # overview UI (provider cards + top costs)
+    api/
+      collect/route.ts       # POST: run all collectors (Bearer CRON_SECRET if set)
+      resources/route.ts     # GET: resources JSON
+      summary/route.ts       # GET: cost-by-provider JSON
+  lib/monitor/
+    config.ts db.ts util.ts collect.ts
+    providers/hetzner.ts digitalocean.ts cloudflare.ts dreamhost.ts godaddy.ts aws.ts gcp.ts
+  scripts/collect-loop.mjs   # cron sidecar: POSTs /api/collect on an interval
+.github/workflows/ci.yml     # lint + build
+Dockerfile.dashboard docker-compose.yml
 ```
 
 ## Quick start
 
 ```bash
 cp config.example.toml config.toml   # fill tokens; never commit this file
-make test && make collect
-make api                               # JSON API + fallback UI on 127.0.0.1:4000
-cd dashboard && npm install && npm run dev   # framework UI on :3000
+cd dashboard && npm install && npm run dev   # :3000, API on same origin
+curl -X POST http://127.0.0.1:3000/api/collect   # run collectors
 ```
+
+Scheduling: `scripts/collect-loop.mjs` (used by compose `collector` service),
+Vercel Cron, or host cron hitting `POST /api/collect`. Set `CRON_SECRET` to
+guard the endpoint. Env knobs: `CM_CONFIG` (default `../config.toml`),
+`CM_DB` (default `../cloud-monitor.db`).
 
 Docker:
 
 ```bash
 cp config.example.toml config.toml
-docker compose up --build
+CRON_SECRET=... docker compose up --build
 ```
 
 Caddy:
@@ -47,7 +55,7 @@ monitor.example.com {
 }
 ```
 
-## Provider auth
+## Provider auth (`config.toml` token)
 
 | Provider | `token =` |
 |---|---|
@@ -64,7 +72,7 @@ monitor.example.com {
 - Hetzner servers/LBs: `server-types` / `load-balancer-types` monthly Gross, prorated MTD.
 - Hetzner volumes: €0.044/GB-month. Firewalls/networks/floating IPs: 0.
 - DigitalOcean: droplet `size.price_monthly` prorated MTD; volumes $0.10/GB-month; LBs $12/mo prorated.
-- AWS: Cost Explorer MTD UnblendedCost total + per-service `billing` rows; EC2/RDS inventory rows cost 0.
+- AWS: Cost Explorer MTD UnblendedCost total + per-service `billing` rows; EC2 inventory rows cost 0.
 - GCP: inventory only (GCE/SQL/GCS), cost 0 — needs billing export for MTD spend.
 - Cloudflare/DreamHost/GoDaddy (domains/DNS): 0 — inventory/expiry tracking only.
 

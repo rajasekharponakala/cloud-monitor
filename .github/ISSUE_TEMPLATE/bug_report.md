@@ -8,6 +8,6 @@ labels: bug
 
 ## Provider / account type (hetzner, digitalocean, aws, gcp, ...)
 
-## Logs (`python3 -m monitor.scheduler` output)
+## Logs (`POST /api/collect` response)
 
 ## Config (redact tokens)
