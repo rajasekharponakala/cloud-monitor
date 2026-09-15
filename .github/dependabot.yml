@@ -4,3 +4,22 @@ updates:
     directory: /dashboard
     schedule:
       interval: weekly
+    groups:
+      # react + react-dom must always land together (peer deps)
+      react:
+        patterns:
+          - "react"
+          - "@types/react"
+          - "react-dom"
+          - "@types/react-dom"
+    ignore:
+      # Majors held until the planned Next 14 -> 15 -> 16 upgrade:
+      # - next 16 removes `next lint` (CI change needed) + requires React 19
+      # - eslint 10 breaks eslint-config-next@14
+      # - typescript 7 is not detected by Next 14
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
