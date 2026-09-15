@@ -7,15 +7,9 @@ import { collect as dreamhost } from "./providers/dreamhost";
 import { collect as godaddy } from "./providers/godaddy";
 import { collect as aws } from "./providers/aws";
 import { collect as gcp } from "./providers/gcp";
-import { collect as openai } from "./providers/openai";
-import { collect as anthropic } from "./providers/anthropic";
-import { collect as openrouter } from "./providers/openrouter";
-import { collect as opencode } from "./providers/opencode_local";
-import { collect as claudecode } from "./providers/claude_local";
 
 const COLLECTORS: Record<string, (account: string, token: string) => Promise<import("./types").Row[]>> = {
   hetzner, digitalocean, cloudflare, dreamhost, godaddy, aws, gcp,
-  openai, anthropic, openrouter, opencode, claudecode,
 };
 
 export async function runOnce(): Promise<Record<string, number | string>> {

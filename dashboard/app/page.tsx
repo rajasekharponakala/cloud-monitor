@@ -33,7 +33,7 @@ export default function Home() {
     <main style={{ fontFamily: "sans-serif", maxWidth: 1100, margin: "0 auto", padding: 24 }}>
       <h1>Cloud Monitor</h1>
       <p>
-        Hetzner · DigitalOcean · Cloudflare · DreamHost · GoDaddy · AWS · GCP · AI (OpenAI, Anthropic, OpenRouter, OpenCode, Claude Code) —{" "}
+        Hetzner · DigitalOcean · Cloudflare · DreamHost · GoDaddy · AWS · GCP —{" "}
         <b>${total.toFixed(2)} MTD est.</b>
       </p>
       {error && <p style={{ color: "red" }}>{error}</p>}
