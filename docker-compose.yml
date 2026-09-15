@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - cm-data:/app
+    restart: unless-stopped
+
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - cm-data:/app
+    # override CMD: run collection every 30 min
+    command: sh -c "while true; do python -m monitor.scheduler; sleep 1800; done"
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+      # NOTE: client-side fetch, so this must be browser-reachable.
+      # Override for your domain, e.g. https://monitor-api.example.com
+      args:
+        NEXT_PUBLIC_API_BASE: http://127.0.0.1:4000
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  cm-data:

@@ -1,0 +1,40 @@
+# Copy to config.toml and fill tokens. One [[account]] per credential.
+[general]
+db = "cloud-monitor.db"
+interval_minutes = 30
+port = 4000
+
+# [[account]]
+# provider = "hetzner"      # hetzner | digitalocean | cloudflare | dreamhost | godaddy
+# name = "hetzner-prod"
+# token = "hcloud-token"
+
+# [[account]]
+# provider = "digitalocean"
+# name = "do-prod"
+# token = "dop_v1_xxxx"
+
+# [[account]]
+# provider = "cloudflare"
+# name = "cf-main"
+# token = "cf-api-token"    # Bearer API token (Zone:Read minimum)
+
+# [[account]]
+# provider = "dreamhost"
+# name = "dh-main"
+# token = "DH_API_KEY"      # api.dreamhost.com key
+
+# [[account]]
+# provider = "godaddy"
+# name = "gd-main"
+# token = "KEY:SECRET"      # GoDaddy key:secret pair
+
+# [[account]]
+# provider = "aws"
+# name = "aws-prod"
+# token = "AKIA...:SECRET[:REGION]"  # SigV4, default us-east-1; CE MTD billing included
+
+# [[account]]
+# provider = "gcp"
+# name = "gcp-prod"
+# token = "PROJECT_ID:ACCESS_TOKEN"  # `gcloud auth print-access-token`; inventory only, cost 0
