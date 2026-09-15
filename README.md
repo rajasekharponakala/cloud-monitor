@@ -66,6 +66,11 @@ monitor.example.com {
 | godaddy | `KEY:SECRET` |
 | aws | `ACCESS_KEY:SECRET[:REGION]` (SigV4, default us-east-1) |
 | gcp | `PROJECT_ID:ACCESS_TOKEN` (`gcloud auth print-access-token`) |
+| openai | Org **admin** key (usage + costs API; plain API keys return 403) |
+| anthropic | Org **admin** key (Claude Code `usage_report` analytics API) |
+| openrouter | API key (key credits: limit / `usage_monthly`) |
+| opencode | Local: empty = `~/.local/share/opencode/opencode.db`, or explicit path (per-session cost + tokens) |
+| claudecode | Local: empty = `~/.claude/projects`, or explicit dir (token sums per day+model, cost estimated) |
 
 ## Cost model (estimates, not invoices)
 
@@ -75,6 +80,12 @@ monitor.example.com {
 - AWS: Cost Explorer MTD UnblendedCost total + per-service `billing` rows; EC2 inventory rows cost 0.
 - GCP: inventory only (GCE/SQL/GCS), cost 0 — needs billing export for MTD spend.
 - Cloudflare/DreamHost/GoDaddy (domains/DNS): 0 — inventory/expiry tracking only.
+- OpenAI: real 30d costs + per-model token usage (admin key required).
+- Anthropic: `usage_report` analytics (defensive parse; raw snapshot row if shape differs).
+- OpenRouter: key credits (`usage_monthly` as MTD).
+- OpenCode (local): exact per-session cost + tokens from `opencode.db`.
+- Claude Code (local): exact token sums from transcripts; cost estimated from public per-MTok rates.
+- Gemini/ChatGPT subscriptions: no API — track via OpenRouter/GCP-billing or manual rows (gap documented).
 
 ## Contributing
 

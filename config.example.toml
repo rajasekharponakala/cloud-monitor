@@ -38,3 +38,29 @@ port = 4000
 # provider = "gcp"
 # name = "gcp-prod"
 # token = "PROJECT_ID:ACCESS_TOKEN"  # `gcloud auth print-access-token`; inventory only, cost 0
+
+# --- AI usage ---
+# [[account]]
+# provider = "openai"
+# name = "openai-org"
+# token = "OPENAI_ADMIN_KEY"   # org usage + costs API (needs admin key, not plain API key)
+
+# [[account]]
+# provider = "anthropic"
+# name = "anthropic-org"
+# token = "ANTHROPIC_ADMIN_KEY"  # Claude Code usage_report analytics API
+
+# [[account]]
+# provider = "openrouter"
+# name = "openrouter-main"
+# token = "OPENROUTER_API_KEY"   # key credits: limit / usage_monthly
+
+# [[account]]
+# provider = "opencode"
+# name = "opencode-local"
+# token = ""   # empty = ~/.local/share/opencode/opencode.db (per-session cost+tokens)
+
+# [[account]]
+# provider = "claudecode"
+# name = "claude-local"
+# token = ""   # empty = ~/.claude/projects (token sums per day+model, cost estimated)
